@@ -11,7 +11,7 @@ function Login(props) {
                     <div
                         className='login-button google'
                         onClick={()=>{
-                            document.location.href=`${process.env.REACT_APP_ServerDomain}/user/login`
+                            document.location.href=`${process.env.REACT_APP_ServerDomain}/oauth2/authorization/google`
                         }}
                     >
                         <GoogleOutlined className='logo'/>

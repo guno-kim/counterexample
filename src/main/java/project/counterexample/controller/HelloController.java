@@ -3,7 +3,6 @@ package project.counterexample.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import project.counterexample.entity.User;
 import project.counterexample.repository.UserRepository;
 
 
@@ -20,9 +19,8 @@ public class HelloController {
 
     @GetMapping("/save")
     public String save() {
-        User user = new User();
+        User2 user = new User2();
         user.setName("guno");
-        userRepository.save(user);
         return "sss";
     }
 }
