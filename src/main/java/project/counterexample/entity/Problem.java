@@ -14,7 +14,7 @@ public class Problem extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User2 user;
+    private User user;
 
     @Enumerated(EnumType.STRING)
     private ProblemType problemType;
