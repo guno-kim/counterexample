@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import {Divider,Table } from 'antd'
 import Layout from '../../Layout/Layout'
 import problemAPI from '../../../apis/problem'
+import userAPI from '../../../apis/user';
 
 function MyPage() {
     const data=useSelector(state => state.user.data)
@@ -23,6 +24,8 @@ function MyPage() {
     }, [data])
     useEffect(() => {
         problemAPI.getMyList().then((res)=>{setProblems(res.data)})
+        userAPI.get().then((res)=>{
+            setName(res.data.name)})
     }, [])
 
     const handleDelete=(_id)=>{

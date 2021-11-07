@@ -20,7 +20,7 @@ public class IndexController {
     public String index(Principal principal){
         System.out.println("====================");
         System.out.println("/ called");
-//        System.out.println("req = " + principal.getName());
+        System.out.println("req = " + principal.getName());
         System.out.println("principal = " + principal);
         System.out.println("====================");
         return String.format("redirect:%s",clientUrl);

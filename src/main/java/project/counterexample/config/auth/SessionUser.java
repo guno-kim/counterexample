@@ -1,7 +1,7 @@
 package project.counterexample.config.auth;
 
 import lombok.Getter;
-import project.counterexample.entity.User;
+import project.counterexample.domain.entity.User;
 
 import java.io.Serializable;
 

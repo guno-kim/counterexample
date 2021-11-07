@@ -1,55 +1,57 @@
 package project.counterexample.config.auth;
 
-import lombok.Builder;
 import lombok.Getter;
-import project.counterexample.entity.Provider;
-import project.counterexample.entity.User;
+import org.springframework.stereotype.Component;
+import project.counterexample.domain.entity.Provider;
+import project.counterexample.domain.entity.User;
 
+import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
 public class OAuthAttributes {
-    private Map<String, Object> attributes;
-    private String nameAttributeKey;
-    private String name;
-    private String email;
-    private Provider provider;
-    private String subId;
+    private Map<String, Object> attributes = new HashMap<>();
 
-    @Builder
-    public OAuthAttributes(Map<String, Object> attributes,
-                           String nameAttributeKey, String name,
-                           String email,Provider provider,String subId) {
-        this.attributes = attributes;
-        this.nameAttributeKey= nameAttributeKey;
-        this.name = name;
-        this.email = email;
-        this.provider = provider;
-        this.subId = subId;
+    public OAuthAttributes(String provider, Map<String, Object> attributes) {
+        for (String key : attributes.keySet()) {
+            this.attributes.put(key, attributes.get(key));
+        }
+        this.attributes.put("provider", Provider.fromStr(provider));
     }
-
-    public static OAuthAttributes of(String registrationId,
-                                     String userNameAttributeName,
-                                     Map<String, Object> attributes) {
-
-        return OAuthAttributes.builder()
-                .name((String) attributes.get("name"))
-                .email((String) attributes.get("email"))
-                .attributes(attributes)
-                .subId((String) attributes.get("sub"))
-                .provider(registrationId.equals("google") ? Provider.GOOGLE : Provider.FACEBOOK)
-                .nameAttributeKey(userNameAttributeName)
-                .build();
-    }
-
-
 
     public User toEntity() {
         return User.builder()
-                .name(name)
-                .email(email)
-                .provider(provider)
-                .subId(subId)
+                .name((String) attributes.get("name"))
+                .email((String) attributes.get("email"))
+                .provider((Provider) attributes.get("provider"))
+                .subId((String) attributes.get("sub"))
                 .build();
+    }
+
+    @WebFilter("/*")
+    @Component
+    public static class CORSFilter implements Filter {
+        @Override
+        public void init(FilterConfig filterConfig) throws ServletException {
+
+        }
+
+        @Override
+        public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+            HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+            httpServletResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+            httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+            httpServletResponse.setHeader("Access-Control-Allow-Headers", "content-type");
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
+
+        @Override
+        public void destroy() {
+
+        }
     }
 }

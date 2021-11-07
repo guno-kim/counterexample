@@ -1,13 +1,9 @@
 package project.counterexample.controller;
 
 import lombok.Data;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import project.counterexample.entity.Problem;
-import project.counterexample.entity.ProblemType;
+import project.counterexample.domain.entity.ProblemType;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 @RestController

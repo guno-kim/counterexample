@@ -1,8 +1,8 @@
 package project.counterexample.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.counterexample.entity.Provider;
-import project.counterexample.entity.User;
+import project.counterexample.domain.entity.Provider;
+import project.counterexample.domain.entity.User;
 
 import java.util.Optional;
 

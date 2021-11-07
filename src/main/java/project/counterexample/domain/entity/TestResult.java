@@ -1,4 +1,4 @@
-package project.counterexample.entity;
+package project.counterexample.domain.entity;
 
 import javax.persistence.*;
 

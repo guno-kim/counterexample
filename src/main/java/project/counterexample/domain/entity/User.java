@@ -1,4 +1,4 @@
-package project.counterexample.entity;
+package project.counterexample.domain.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -40,9 +40,8 @@ public class User {
         this.provider = provider;
     }
 
-    public User update(String name, String picture) {
+    public void changeName(String name) {
         this.name = name;
-        return this;
     }
 
 }
