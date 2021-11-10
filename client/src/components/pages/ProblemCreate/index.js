@@ -19,31 +19,31 @@ import CodeBox from '../../commons/CodeBox/CodeBox'
 function GenerateData(props) {
     const [Format, setFormat] = useState([])
     const [Data, setData] = useState([])
-    const [Setting, setSetting] = useState({
-        id:'',
+    const [Problem, setProblem] = useState({
+        problemNum:'',
         title:'',
         description:'',
         variables:[{type:'int',name:'a',min:0,max:5,fix:true}],
         testCode:{language:'python',code:''},
-        inputBlocks:[{inputs:new Array(10).fill("").map(()=>new Array(10).fill("")),width:1,height:1,horizonRep:1,verticalRep:1}],
+        blocks:[{content:new Array(10).fill("").map(()=>new Array(10).fill("")),width:1,height:1,horizonRep:1,verticalRep:1}],
     })
     const [isModalVisible, setIsModalVisible] = useState(false);
     
     const textAreaRef = useRef(null);
 
     //State Handle Function
-    const handleVariables=(variables)=>{setSetting({...Setting,variables:variables})}
-    const handleInput=(inputBlocks)=>{ setSetting({...Setting,inputBlocks:inputBlocks})}
-    const handleTestCode=(code)=>{setSetting({...Setting,testCode:code})}
-    const handleId=(e)=>{setSetting({...Setting,id:e.target.value})}
-    const handleTitle=(e)=>{setSetting({...Setting,title:e.target.value})}
-    const handleDesc=(e)=>{setSetting({...Setting,description:e.target.value})}
+    const handleVariables=(variables)=>{setProblem({...Problem,variables:variables})}
+    const handleBlocks=(blocks)=>{ setProblem({...Problem,blocks:blocks})}
+    const handleTestCode=(code)=>{setProblem({...Problem,testCode:code})}
+    const handleProblemNum=(e)=>{setProblem({...Problem,problemNum:e.target.value})}
+    const handleTitle=(e)=>{setProblem({...Problem,title:e.target.value})}
+    const handleDesc=(e)=>{setProblem({...Problem,description:e.target.value})}
     const handleSave=()=>{
-        problemAPI.create(Setting)
+        problemAPI.create(Problem)
             .then((res)=>{
                     alert("저장 성공")
                     console.log(props)
-                    props.history.push('/problem')
+                    // props.history.push('/problem')
             })
             .catch((err)=>{
                 console.log(err)
@@ -57,8 +57,8 @@ function GenerateData(props) {
         let body={
             params:{
                 setting:{
-                    variables:Setting.variables,
-                    inputBlocks:Setting.inputBlocks
+                    variables:Problem.variables,
+                    inputBlocks:Problem.blocks
                 }
             }
         }
@@ -88,7 +88,7 @@ function GenerateData(props) {
                         <h1 className='title'>변수 선언</h1>
                         <h3 className='description'>사용할 변수를 선언하세요</h3>
                     </div>
-                    <VariableContainer sendState={handleVariables} default={Setting.variables}/>
+                    <VariableContainer sendState={handleVariables} default={Problem.variables}/>
                 </div>
                 
                 <div className='content-container'>
@@ -96,7 +96,8 @@ function GenerateData(props) {
                         <h1 className='title'>입력 데이터 만들기</h1>
                         <h3 className='description'>변수와 숫자를 이용해 입력 데이터를 만드세요</h3>
                     </div>
-                    <InputContainer sendState={handleInput} default={Setting.inputBlocks}/>
+                    <InputContainer sendState={handleBlocks} default={Problem.blocks}/>
+                    <button onClick={()=>{console.log(Problem)}}>asdj</button>
                 </div>
 
                 <div className='content-container'>
@@ -127,7 +128,7 @@ function GenerateData(props) {
                         <h1 className='title'>정답 코드 입력</h1>
                         <h3 className='description'>비교에 사용될 정답 코드를 입력하세요</h3>
                     </div>
-                    <CodeBox value={Setting.testCode} sendState={handleTestCode} style={{height:'400px'}}/>
+                    <CodeBox value={Problem.testCode} sendState={handleTestCode} style={{height:'400px'}}/>
                 </div>
                 
                 <Button type="primary"  size='large' onClick={showModal} style={{marginBottom:'50px'}}>저장</Button>
@@ -146,14 +147,14 @@ function GenerateData(props) {
                         onFinish={handleSave}
                     >
                         <Form.Item
-                            label="문제 ID"
+                            label="문제 번호"
                             name="Id"
                             rules={[{
                                 required: true,
-                                message: '문제 ID를 입력해주세요'
+                                message: '문제 번호를 입력해주세요'
                             }]}
                         >
-                            <Input placeholder="ex) 백준 1000" onChange={handleId} value={Setting.id}/>
+                            <Input placeholder="ex) 백준 1000" onChange={handleProblemNum} value={Problem.problemNum}/>
                         </Form.Item>
 
                         <Form.Item
@@ -164,7 +165,7 @@ function GenerateData(props) {
                                 message: '문제 제목을 입력해주세요'
                             }]}
                         >
-                            <Input onChange={handleTitle} value={Setting.title}/>
+                            <Input onChange={handleTitle} value={Problem.title}/>
                         </Form.Item>
                         <Form.Item
                             label="설명"
@@ -172,7 +173,7 @@ function GenerateData(props) {
                                 {span:20}
                             }
                         >
-                            <Input.TextArea onChange={handleDesc} value={Setting.description} />
+                            <Input.TextArea onChange={handleDesc} value={Problem.description} />
                         </Form.Item>
                         <Form.Item
                             wrapperCol={

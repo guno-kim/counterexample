@@ -22,8 +22,8 @@ const problemAPI={
         return axios.get(url,data)
     },
     create : (data)=>{
-        const url='/problem/create'
-        return axios.post('/problem/create',data)
+        const url='/problem'
+        return axios.post('/problem',data)
     },
     like : (problem_Id)=>{
         return axios.post(`/problem/${problem_Id}/like`)

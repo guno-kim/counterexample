@@ -15,47 +15,47 @@ function InputBlockContainer(props) {
         return result
     }
 
-    const [InputBlocks, setInputBlocks] = useState(props.default)
+    const [Blocks, setBlocks] = useState(props.default)
 
     useEffect(() => {
-        props.sendState(InputBlocks)
+        props.sendState(Blocks)
     }, [])
 
     useEffect(() => {
-        props.sendState(InputBlocks)
-    }, [InputBlocks])
+        props.sendState(Blocks)
+    }, [Blocks])
 
     const changeInputBoxs=(index)=>{
         return(
             (box)=>{
-                let temp=InputBlocks
+                let temp=Blocks
                 temp[index]=box
-                setInputBlocks(temp)
+                setBlocks(temp)
             }
         )
     }
     const deleteInputBox=(index)=>{
-        let temp=[...InputBlocks]
+        let temp=[...Blocks]
         temp.splice(index,1)
-        setInputBlocks(temp)
+        setBlocks(temp)
     }
 
 
-    const renderBoxs=InputBlocks.map((item,index)=>{
-        if(!item.inputs){
+    const renderBoxs=Blocks.map((block,index)=>{
+        if(!block.content){
             return
         }
         return(
             <div key={index}  style={{display:'flex',alignItems:'center',marginTop:'10px', width:'100%'}}>
-                <InputBlock data={item} sendState={changeInputBoxs(index)}/>
+                <InputBlock data={block} sendState={changeInputBoxs(index)}/>
                 <Button onClick={()=>deleteInputBox(index)} type="primary" style={{marginLeft:'20px'}} danger>삭제</Button>
             </div>
         )
     })
 
     const addInputBlocks=()=>{
-        let temp=[...InputBlocks,{inputs:makeEmptyArray(),width:1,height:1,horizonRep:1,verticalRep:1}]
-        setInputBlocks(temp)
+        let temp=[...Blocks,{content:makeEmptyArray(),width:1,height:1,horizonRep:1,verticalRep:1}]
+        setBlocks(temp)
     }
 
     
