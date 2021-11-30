@@ -1,45 +1,41 @@
-import React,{useState,useEffect,useRef} from 'react'
+import React,{useState,useContext,useRef} from 'react'
 import {Button,Input,Form,Modal} from 'antd'
 import styled from 'styled-components'
 import Layout from '../../Layout/Layout'
 import { withRouter } from 'react-router-dom';
 import problemAPI from '../../../apis/problem'
 import inputAPI from '../../../apis/input'
-
+import {ProblemContext} from '../../../context/problem'
 
 import _Int from './sections/Variable/_Int'
 import _Float from './sections/Variable/_Float'
 import _String  from './sections/Variable/_String'
 import VariableContainer from './sections/Variable/VariableContainer';
-import InputContainer from './sections/InputBlockContainer/InputBlocks'
 import InputFormat from './sections/InputFormat/InputFormat'
 import CodeBox from '../../commons/CodeBox/CodeBox'
-
+import ContentContainer from './sections/ContentContainer/ContentContainer';
+import MetaData from './sections/MetaData/MetaData';
+import Blocks from './sections/Blocks/Blocks'
 
 function GenerateData(props) {
+    const { title,id,blocks,desc} = useContext(ProblemContext);
+
     const [Format, setFormat] = useState([])
     const [Data, setData] = useState([])
-    const [Problem, setProblem] = useState({
-        problemNum:'',
-        title:'',
-        description:'',
-        variables:[{type:'int',name:'a',min:0,max:5,fix:true}],
-        testCode:{language:'python',code:''},
-        blocks:[{content:new Array(10).fill("").map(()=>new Array(10).fill("")),width:1,height:1,horizonRep:1,verticalRep:1}],
-    })
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [Variables, setVariables] = useState([{type:'int',name:'a',min:0,max:5,fix:true}])
+    const [AnswerCode, setAnswerCode] = useState({language:'python',code:''})
     
     const textAreaRef = useRef(null);
 
     //State Handle Function
-    const handleVariables=(variables)=>{setProblem({...Problem,variables:variables})}
-    const handleBlocks=(blocks)=>{ setProblem({...Problem,blocks:blocks})}
-    const handleTestCode=(code)=>{setProblem({...Problem,testCode:code})}
-    const handleProblemNum=(e)=>{setProblem({...Problem,problemNum:e.target.value})}
-    const handleTitle=(e)=>{setProblem({...Problem,title:e.target.value})}
-    const handleDesc=(e)=>{setProblem({...Problem,description:e.target.value})}
+    const handleVariables=(variables)=>{setVariables(variables)}
+    const handleAnswerCode=(code)=>{setAnswerCode(code)}
     const handleSave=()=>{
-        problemAPI.create(Problem)
+        problemAPI.create({
+            problemNum:id,
+            title,blocks,desc,
+            answerCode:AnswerCode
+        })
             .then((res)=>{
                     alert("저장 성공")
                     console.log(props)
@@ -51,14 +47,12 @@ function GenerateData(props) {
             })
     }
 
-    const showModal = () => {setIsModalVisible(true)};
-    const handleCancel = () => {setIsModalVisible(false);};
     const getExample=()=>{
         let body={
             params:{
                 setting:{
-                    variables:Problem.variables,
-                    inputBlocks:Problem.blocks
+                    variables:Variables,
+                    inputBlocks:Blocks
                 }
             }
         }
@@ -83,111 +77,47 @@ function GenerateData(props) {
     return (
         <Layout>
         <Wrapper>
-                <div className='content-container'>
-                    <div className='header'>
-                        <h1 className='title'>변수 선언</h1>
-                        <h3 className='description'>사용할 변수를 선언하세요</h3>
-                    </div>
-                    <VariableContainer sendState={handleVariables} default={Problem.variables}/>
-                </div>
-                
-                <div className='content-container'>
-                    <div className='header'>
-                        <h1 className='title'>입력 데이터 만들기</h1>
-                        <h3 className='description'>변수와 숫자를 이용해 입력 데이터를 만드세요</h3>
-                    </div>
-                    <InputContainer sendState={handleBlocks} default={Problem.blocks}/>
-                    <button onClick={()=>{console.log(Problem)}}>asdj</button>
-                </div>
+            <ContentContainer title={"문제 정보"} subtitle={"사용할 변수를 선언하세요"} content={
+                <MetaData />
+            }/>
+            <ContentContainer title={"변수 선언"} subtitle={"사용할 변수를 선언하세요"} content={
+                <VariableContainer sendState={handleVariables} default={Variables}/>
+            }/>
+            <ContentContainer title={"입력 데이터 만들기"} subtitle={"변수와 숫자를 이용해 입력 데이터를 만드세요"} content={
+                <Blocks />
+            }/>
 
-                <div className='content-container'>
-                    <div style={{display:'flex'}}>
-                        <div style={{margin:'20px'}}>
-                            <div style={{fontSize:'2rem', textAlign:'center'}}>입력 형식</div>
-                            <InputFormat format={Format}/>
+            <div className='content-container'>
+                <div style={{display:'flex'}}>
+                    <div style={{margin:'20px'}}>
+                        <div style={{fontSize:'2rem', textAlign:'center'}}>입력 형식</div>
+                        <InputFormat format={Format}/>
+                    </div>
+
+                    <div style={{margin:'20px'}}>
+                        <div style={{display:'flex',alignItems:'center',justifyContent:'center', position:'relative'}}>
+                            <div style={{fontSize:'2rem', margin:'0 20px'}}>입력값</div>
+                            <button onClick={copyToClipboard} id='copy-button' >복사</button> 
                         </div>
-
-                        <div style={{margin:'20px'}}>
-                            <div style={{display:'flex',alignItems:'center',justifyContent:'center', position:'relative'}}>
-                                <div style={{fontSize:'2rem', margin:'0 20px'}}>입력값</div>
-                                <button onClick={copyToClipboard} id='copy-button' >복사</button> 
-                            </div>
-                            
-                            <textarea 
-                                ref={textAreaRef}
-                                value={Data}
-                                id='example'
-                            />
-                        </div>
+                        
+                        <textarea 
+                            ref={textAreaRef}
+                            value={Data}
+                            id='example'
+                        />
                     </div>
-                    <Button onClick={getExample} size='medium' >생성</Button>
-                   
                 </div>
-                <div className="content-container">
-                    <div className='header'>
-                        <h1 className='title'>정답 코드 입력</h1>
-                        <h3 className='description'>비교에 사용될 정답 코드를 입력하세요</h3>
-                    </div>
-                    <CodeBox value={Problem.testCode} sendState={handleTestCode} style={{height:'400px'}}/>
-                </div>
+                <Button onClick={getExample} size='medium' >생성</Button>
+            </div>
+
+            <ContentContainer title={"정답 코드 입력"} subtitle={"비교에 사용될 정답 코드를 입력하세요"} content={
+                <CodeBox value={AnswerCode} sendState={handleAnswerCode} style={{height:'400px'}}/>
+            }/>
                 
-                <Button type="primary"  size='large' onClick={showModal} style={{marginBottom:'50px'}}>저장</Button>
-
+            <Button type="primary"  size='large' onClick={handleSave} style={{marginBottom:'50px'}}>저장</Button>
                 
-                <Modal title="Basic Modal" visible={isModalVisible} 
-                    onCancel={handleCancel}
-                    footer={[
-                      ]}
-                >
-                    <Form
-                        labelCol={{ span: 4}}
-                        wrapperCol={ {span: 12}}
-                        size='middle'
-                        layout="vertical"
-                        onFinish={handleSave}
-                    >
-                        <Form.Item
-                            label="문제 번호"
-                            name="Id"
-                            rules={[{
-                                required: true,
-                                message: '문제 번호를 입력해주세요'
-                            }]}
-                        >
-                            <Input placeholder="ex) 백준 1000" onChange={handleProblemNum} value={Problem.problemNum}/>
-                        </Form.Item>
-
-                        <Form.Item
-                            label="제목"
-                            name="Title"
-                            rules={[{
-                                required: true,
-                                message: '문제 제목을 입력해주세요'
-                            }]}
-                        >
-                            <Input onChange={handleTitle} value={Problem.title}/>
-                        </Form.Item>
-                        <Form.Item
-                            label="설명"
-                            wrapperCol={
-                                {span:20}
-                            }
-                        >
-                            <Input.TextArea onChange={handleDesc} value={Problem.description} />
-                        </Form.Item>
-                        <Form.Item
-                            wrapperCol={
-                                {offset:10}
-                            }
-                        >
-                        <Button key="submit" htmlType="submit"  >
-                          저장
-                        </Button>
-                        </Form.Item>
-
-                    </Form>
-                </Modal>
         </Wrapper>
+
         </Layout>
     )
 }
@@ -210,28 +140,6 @@ const Wrapper=styled.div`
         overflow-x: scroll auto;
         border-radius: 10px;
         white-space:nowrap;
-    }
-    .content-container{
-        display:flex ;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 90%;
-        border-radius: 10px;
-        background-color: white;
-        border: 1px solid lightgray;
-        margin: 50px;
-        padding: 20px;
-        .header{
-            width: 100%;
-            display:flex ;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom:20px;
-            .title{
-                font-size:2rem;
-            }
-        }
     }
     #copy-button{
         background:white;

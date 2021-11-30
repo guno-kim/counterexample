@@ -1,0 +1,31 @@
+#block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: rgb(236, 247, 253);
+
+    width:850px;
+    padding:0 20px;
+    border:1px solid lightgray;
+    #inputbox::-webkit-scrollbar {
+        display: none;
+    }
+    .flex-row{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        
+        background:white;
+        width:280px;
+        height:60px;
+        border:1px solid lightgray
+    }
+    .flex-column{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
