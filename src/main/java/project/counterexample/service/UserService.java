@@ -2,16 +2,14 @@ package project.counterexample.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.counterexample.domain.entity.Provider;
+import project.counterexample.domain.type.ProviderType;
 import project.counterexample.domain.entity.User;
 import project.counterexample.repository.UserRepository;
 
 import javax.persistence.EntityManager;
-import java.security.Principal;
 import java.util.Map;
 
 @Service
@@ -32,7 +30,7 @@ public class UserService {
         OAuth2User user = (OAuth2User) auth.getPrincipal();
         Map<String, Object> attributes = user.getAttributes();
         System.out.println("attributes = " + attributes.get("provider").getClass());
-        Provider provider =(Provider) attributes.get("provider");
+        ProviderType provider =(ProviderType) attributes.get("provider");
 
         String sub = (String) attributes.get("sub");
         return userRepository.findByProviderAndSubId(provider, sub);

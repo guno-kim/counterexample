@@ -1,4 +1,4 @@
-package project.counterexample.domain.entity;
+package project.counterexample.domain.type;
 
 public enum ProblemType {
     BOJ,PROGRAMMERS

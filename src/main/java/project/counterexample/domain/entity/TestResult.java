@@ -16,15 +16,16 @@ public class TestResult {
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "testcase_id")
     private TestCase testCase;
 
-    private String testCode;
-    private int testTime;
-    private int answerTime;
+    @OneToOne()
+    @JoinColumn(name = "code_id")
+    private Code code;
+
+    private int time;
     private String errorMessage;
-    private String testOutput;
-    private String answerOutput;
+    private String output;
 
 }

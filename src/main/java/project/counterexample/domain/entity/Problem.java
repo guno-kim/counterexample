@@ -1,6 +1,7 @@
 package project.counterexample.domain.entity;
 
 import lombok.Builder;
+import project.counterexample.domain.type.ProblemType;
 
 import javax.persistence.*;
 
@@ -22,8 +23,9 @@ public class Problem extends BaseEntity{
     private Long problemNum;
     private String title;
     private String description;
-    private String answerCode;
 
-
+    @OneToOne()
+    @JoinColumn(name = "code_id")
+    private Code answerCode;
 
 }

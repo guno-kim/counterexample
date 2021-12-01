@@ -1,17 +1,17 @@
-package project.counterexample.domain.entity;
+package project.counterexample.domain.type;
 
 import lombok.Getter;
 
 @Getter
-public enum Provider {
+public enum ProviderType {
     GOOGLE("Google"),FACEBOOK("Facebook");
 
     private final String name;
-    Provider(String provider) {
+    ProviderType(String provider) {
         this.name = provider;
     }
 
-    static public Provider fromStr(String provider) {
+    static public ProviderType fromStr(String provider) {
         if(provider.equals("Google"))
             return GOOGLE;
         else

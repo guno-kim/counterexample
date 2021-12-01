@@ -2,7 +2,7 @@ package project.counterexample.config.auth;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-import project.counterexample.domain.entity.Provider;
+import project.counterexample.domain.type.ProviderType;
 import project.counterexample.domain.entity.User;
 
 import javax.servlet.*;
@@ -20,14 +20,14 @@ public class OAuthAttributes {
         for (String key : attributes.keySet()) {
             this.attributes.put(key, attributes.get(key));
         }
-        this.attributes.put("provider", Provider.fromStr(provider));
+        this.attributes.put("provider", ProviderType.fromStr(provider));
     }
 
     public User toEntity() {
         return User.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .provider((Provider) attributes.get("provider"))
+                .provider((ProviderType) attributes.get("provider"))
                 .subId((String) attributes.get("sub"))
                 .build();
     }

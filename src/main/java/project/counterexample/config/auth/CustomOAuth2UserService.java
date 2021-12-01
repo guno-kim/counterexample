@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import project.counterexample.domain.entity.Provider;
+import project.counterexample.domain.type.ProviderType;
 import project.counterexample.domain.entity.User;
 import project.counterexample.repository.UserRepository;
 
@@ -33,7 +33,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String subId = (String) attributes.getAttributes().get("sub");
 
-        User user = userRepository.findByProviderAndSubId(Provider.fromStr(provider), subId);
+        User user = userRepository.findByProviderAndSubId(ProviderType.fromStr(provider), subId);
         if (user == null) {
             userRepository.save(attributes.toEntity());
         }

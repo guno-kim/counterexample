@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import project.counterexample.domain.type.LanguageType;
+import project.counterexample.domain.type.ProviderType;
 
 import javax.persistence.*;
 
@@ -30,14 +32,19 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Provider provider;
+    private ProviderType provider;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private LanguageType language;
 
     @Builder
-    public User(String subId, String name, String email, Provider provider) {
+    public User(String subId, String name, String email, ProviderType provider) {
         this.subId = subId;
         this.name = name;
         this.email = email;
         this.provider = provider;
+        this.language = LanguageType.PYTHON;
     }
 
     public void changeName(String name) {
