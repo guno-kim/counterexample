@@ -16,7 +16,7 @@ export async function logout(){
     }
 }
 export async function update(data){
-    const req=await userAPI.update(data).then(res=>res.data)
+    const req=await userAPI.changeName(data).then(res=>res.data)
     return{
         type:UPDATE_USER,
         data:req.data

@@ -32,8 +32,13 @@ public class UserController {
         return new UserDto(user);
     }
 
-    @PostMapping("/user")
-    public void updateUser(@RequestBody Map<String, Object> params , Authentication auth) {
+    @PostMapping("/user/name")
+    public void changeName(@RequestBody Map<String, Object> params , Authentication auth) {
         userService.changeName(auth, (String) params.get("name"));
+    }
+    @PostMapping("/user/language")
+    public void changeLanguage(@RequestBody Map<String, Object> params , Authentication auth) {
+        System.out.println("language");
+        userService.changeLanguage(auth, (String) params.get("language"));
     }
 }

@@ -3,20 +3,27 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux';
 import {update} from '../../../actions/user_action'
 import { withRouter } from 'react-router-dom';
-import {Divider,Table } from 'antd'
+import {Divider,Table,Select } from 'antd'
 import Layout from '../../Layout/Layout'
 import problemAPI from '../../../apis/problem'
 import userAPI from '../../../apis/user';
 
 function MyPage() {
+    const { Option } = Select;
+
     const data=useSelector(state => state.user.data)
     const [Name, setName] = useState("")
     const [Problems, setProblems] = useState([])
+    const [Language, setLanguage] = useState("python");
     const dispatch = useDispatch();
 
     const onNameChange=(e)=>{
         dispatch(update({name:Name}))
     }
+    const changeLanguage=()=>{
+        userAPI.changeLanguage({language:Language})
+    }
+
     useEffect(() => {
         if(data){
             setName(data.name)
@@ -25,7 +32,11 @@ function MyPage() {
     useEffect(() => {
         problemAPI.getMyList().then((res)=>{setProblems(res.data)})
         userAPI.get().then((res)=>{
-            setName(res.data.name)})
+            console.log(res.data);
+            
+            setName(res.data.name)
+            setLanguage(res.data.language.toLowerCase())
+        })
     }, [])
 
     const handleDelete=(_id)=>{
@@ -91,6 +102,14 @@ function MyPage() {
                     <input value={Name} onChange={(e)=>{setName(e.target.value)}}></input>
                     <button onClick={onNameChange}>변경</button>
                  </div>
+                <div style={{display:'flex',flexDirection:'row',alignItems:'center'}}>
+                    <div>주 언어</div>
+                    <Select defaultValue="lucy" value={Language} style={{ width: 120 }} onChange={(e)=>{setLanguage(e)}}>
+                        <Option value="python">python</Option>
+                        <Option value="java">java</Option>
+                    </Select>
+                    <button onClick={()=>changeLanguage()}>변경</button>
+                </div>
 
                 <Divider>내 문제</Divider>
                 <Table

@@ -26,6 +26,12 @@ public class UserService {
         System.out.println("user.getName() = " + user.getName());
     }
 
+    @Transactional
+    public void changeLanguage(Authentication auth,String language) {
+        User user = findByAuth(auth);
+        user.changeLanguage(language);
+    }
+
     public User findByAuth(Authentication auth) {
         OAuth2User user = (OAuth2User) auth.getPrincipal();
         Map<String, Object> attributes = user.getAttributes();

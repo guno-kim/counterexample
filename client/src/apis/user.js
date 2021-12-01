@@ -9,15 +9,20 @@ const userAPI={
         const url='/user/auth'
         return axios.get(url)
     },
-    update:(data)=>{
-        const url='/user'
+    changeName:(data)=>{
+        const url='/user/name'
         return axios.post(url,data)
     },
     get:()=>{
         const url='/user'
         return axios.get(url)
-    }
-
+    },
+    changeLanguage:(data)=>{
+        const url='/user/language'
+        console.log(data);
+        
+        return axios.post(url,data)
+    },
     
 }
 

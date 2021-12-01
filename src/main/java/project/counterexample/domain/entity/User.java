@@ -8,6 +8,7 @@ import project.counterexample.domain.type.LanguageType;
 import project.counterexample.domain.type.ProviderType;
 
 import javax.persistence.*;
+import java.util.Locale;
 
 @Getter
 @NoArgsConstructor
@@ -49,6 +50,10 @@ public class User {
 
     public void changeName(String name) {
         this.name = name;
+    }
+
+    public void changeLanguage(String language) {
+        this.language = LanguageType.valueOf(language.toUpperCase(Locale.ROOT));
     }
 
 }
